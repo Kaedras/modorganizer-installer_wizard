@@ -8,6 +8,7 @@ src/ui/*.py
 .tox
 .vscode
 venv
+.idea/
 
 # MO2 build files:
 vsbuild
