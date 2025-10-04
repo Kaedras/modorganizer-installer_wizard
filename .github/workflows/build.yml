@@ -8,7 +8,19 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-2022, ubuntu-24.04 ]
+        include:
+          - os: windows-2022
+            preset: vs2022-windows
+            build_dir: vsbuild
+          - os: ubuntu-24.04
+            preset: linux
+            build_dir: build
+
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-python@v5
         with:
@@ -24,16 +36,16 @@ jobs:
       - name: Configure Installer Wizard Plugin build
         shell: pwsh
         run: |
-          cmake --preset vs2022-windows "-DCMAKE_INSTALL_PREFIX=install" "-DVCPKG_MANIFEST_FEATURES=standalone"
+          cmake --preset ${{ matrix.preset }} "-DCMAKE_INSTALL_PREFIX=install" "-DVCPKG_MANIFEST_FEATURES=standalone"
 
       - name: Build Installer Wizard Plugin
-        run: cmake --build vsbuild --config RelWithDebInfo
+        run: cmake --build ${{ matrix.build_dir }} --config RelWithDebInfo
 
       - name: Install Installer Wizard Plugin
-        run: cmake --install vsbuild --config RelWithDebInfo
+        run: cmake --install ${{ matrix.build_dir }} --config RelWithDebInfo
 
       - name: Upload Installer Wizard Plugin artifact
         uses: actions/upload-artifact@master
         with:
-          name: installer_wizard
+          name: installer_wizard_${{ runner.os }}
           path: ./install/bin/plugins
