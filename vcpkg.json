@@ -10,7 +10,7 @@
   "vcpkg-configuration": {
     "default-registry": {
       "kind": "git",
-      "baseline": "11166f7fb720babca92b86dee17808146171189a",
+      "baseline": "e25e30e8233b5d98f0f85a5e7a310274ba5acc69",
       "repository": "https://github.com/Kaedras/vcpkg-registry"
     }
   }
